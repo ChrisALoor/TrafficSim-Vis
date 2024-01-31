@@ -7,7 +7,6 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    text-align: center;
     font-size: 23px;
     font-family: 'Bodoni MT Condensed';
     font-weight: bold;
@@ -23,7 +22,6 @@
   
   .app-name svg {
     fill: #0c0c0cd0;
-    
     top: 50%;
     transform: translateX(40%); 
   }
@@ -41,4 +39,88 @@
     overflow-y: hidden;
   }
 
+  /* .lateral{
+    position: absolute;
+    bottom: 500px;
+    right: 440px;
+    background:  #0c0c0cd0;
+    z-index: 10;
+    color: #fff;
+    min-width:900px; 
+    max-height:0px; 
+  }  */
 
+  /* .lateral {
+    position: absolute;
+    top: 80px;
+    left: 4px;
+    background: #0c0c0cd0;
+    z-index: 10;
+    color: #fff;
+    min-width: 900px;
+    max-height: 0px;
+  } */
+  
+  .text-white{
+    font-size: 12px    
+
+  }
+  
+  input[type="checkbox"] {
+    --checkbox-color: green; /* Color del borde del checkbox */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 0.1px solid var(--checkbox-color);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: white; /* Color de fondo del checkbox */
+  }
+  
+  input[type="checkbox"]:checked {
+    background-color: green; /* Color de fondo del checkbox cuando está marcado */
+  }
+  
+  /* Estilo del símbolo de verificación */
+  input[type="checkbox"]:checked::before {
+    content: '✔'; /* Símbolo de verificación */
+    color: white; /* Color del símbolo de verificación */
+    font-size: 12px; /* Tamaño de la fuente del símbolo de verificación */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Estilos para la barra lateral cuando está colapsada */
+.sidebar-collapsed {
+
+  position: absolute;
+  top: 80px;
+  left: 4px;
+  background: #ffffffd0;
+  z-index: 0;
+  color: #fff;
+  min-width: 10px;
+  /* max-height: 0px; */
+  /* Otros estilos de la barra lateral colapsada */
+}
+
+/* Estilos para la barra lateral cuando está expandida */
+.sidebar-expanded {
+
+  position: absolute;
+  top: 80px;
+  left: 4px;
+  background: #0c0c0cd0;
+  z-index: 9;
+  color: #fff;
+  min-width: 200px;
+  max-height: 0px; 
+  z-index: 10
+  /* Obg-gray-700  z-10 top-0 w-1/2*/
+}

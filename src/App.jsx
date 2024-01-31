@@ -1,26 +1,21 @@
 import './App.css'
 
-/* global window */
+/* imports */
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Map } from 'react-map-gl';
-import { Dropdown, Tooltip} from 'flowbite-react';
 import maplibregl from 'maplibre-gl';
-// import { AmbientLight, PointLight, LightingEffect } from '@deck.gl/core';
 import DeckGL from '@deck.gl/react';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { GeoJsonLayer } from '@deck.gl/layers';
+import { Sidebar } from 'flowbite-react';
+import { BiNetworkChart } from "react-icons/bi"
+import { FaCarSide, FaLayerGroup ,FaPlus  } from "react-icons/fa";
+import { BiSolidFileJson } from "react-icons/bi";
+import { TbAdjustmentsHorizontal } from "react-icons/tb";
 
 
-import trips from "./data/cuenca3k_events.json"
-import redes from "./data/cuenca3k_network.json"
 
-
-// Source data
-const DATA_URL = {
-  TRIPS: trips,
-  NETWORK: redes,
-};
 
 
 const DEFAULT_THEME = {
@@ -28,44 +23,71 @@ const DEFAULT_THEME = {
   trailColor1: [23, 184, 190],
 };
 
-const INITIAL_VIEW_STATE = {
-  longitude: -79.0,
-  latitude: -2.9,
-  zoom: 2,
-  pitch: 45,
-  bearing: 0,
-};
-
-
 //const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json'; //mapa negro sin labels
 //const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'; //mapa blanco con labels
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'; //mapa a color con labels 
 
 export default function App({
-  trips = DATA_URL.TRIPS,
-  net = DATA_URL.NETWORK,
-  initialViewState = INITIAL_VIEW_STATE,
   mapStyle = MAP_STYLE,
   theme = DEFAULT_THEME,
   loopLength = 86400,
   initialAnimationSpeed = 1,
 }) {
-  const [tooltip, setTooltip] = useState(null);
+  
   const [isPlaying, setPlaying] = useState(true);
   const [time, setTime] = useState(0);
   const [animationSpeed, setAnimationSpeed] = useState(initialAnimationSpeed);
-  const [networkLayerVisible, setNetworkLayerVisible] = useState(true);
-  const [tripsLayerVisible, setTripsLayerVisible] = useState(true);
+
+
+  const [fileName, setFileName] = useState('');
+  const [fileNameNetwork, setFileNameNetwork] = useState('');
+  const [fileNameTrips, setFileNameTrips] = useState('');
+  const [fileNameCustom1, setfileNameCustom1] = useState('');
+  const [fileNameCustom2, setfileNameCustom2] = useState('');
+  const [fileNameCustom3, setfileNameCustom3] = useState('');
+
+
+
 
   const[trailLength, setTrailLength]=useState(50)
-
-
   const handleTrailLengthChange = (event) => {
     const newTrailLength = parseInt(event.target.value, 10);
     setTrailLength(newTrailLength);
   };
-  
+
+  const[pointRadiusScale, setpointRadiusScale]=useState(1)
+  const handlepointRadiusScaleChange = (event) => {
+    const newpointRadiusScale = parseInt(event.target.value, 10);
+    setpointRadiusScale(newpointRadiusScale);
+  };
+
+  const[widthMinPixels, setwidthMinPixels]=useState(5)
+  const handlewidthMinPixelsChange = (event) => {
+    const newwidthMinPixels= parseInt(event.target.value, 10);
+    setwidthMinPixels(newwidthMinPixels);
+  };
+
+  const[getLineWidth, setgetLineWidth]=useState(1)
+  const handlegetLineWidthChange = (event) => {
+    const newgetLineWidth= parseInt(event.target.value, 10);
+    setgetLineWidth(newgetLineWidth);
+  };
+
+
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const handleToggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+ 
+
+  // trips and geojson layer
+  const [customLayer5, setCustomLayer5] = useState(null);
+  const [networkLayerVisible, setNetworkLayerVisible] = useState(false);
+  const [customLayer4, setCustomLayer4] = useState(null);
+  const [tripsLayerVisible, setTripsLayerVisible] = useState(false);
   //custom layers
   const [customLayer1, setCustomLayer1] = useState(null);
   const [customLayerVisible1, setCustomLayerVisible1] = useState(false);
@@ -104,18 +126,67 @@ export default function App({
 
 
 
-  const handleFileUpload = (event, setCustomLayer, setCustomLayerVisible) => {
+  // const handleFileUpload = (event, setCustomLayer, setCustomLayerVisible,setFileName) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const geoJsonData = JSON.parse(e.target.result);
+  //       setCustomLayer(geoJsonData);
+  //       setCustomLayerVisible(true);
+  //       setFileName(file.name);
+  //     };
+  //     reader.readAsText(file);
+  //   }
+  // };
+
+  const handleFileUpload = (event, setCustomLayer, setCustomLayerVisible, setFileName, layerType) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const geoJsonData = JSON.parse(e.target.result);
-        setCustomLayer(geoJsonData);
-        setCustomLayerVisible(true);
+        const data = JSON.parse(e.target.result);
+        switch (layerType) {
+          case 'network':
+            setCustomLayer(data);
+            setCustomLayerVisible(true);
+            setFileNameNetwork(file.name);
+            break;
+          case 'trips':
+            setCustomLayer(data);
+            setCustomLayerVisible(true);
+            setFileNameTrips(file.name);
+            break;
+
+          case 'layer1':
+            setCustomLayer(data);
+            setCustomLayerVisible(true);
+            setfileNameCustom1(file.name);
+            break;
+          case 'layer2':
+            setCustomLayer(data);
+            setCustomLayerVisible(true);
+            setfileNameCustom2(file.name);
+            break;
+          case 'layer3':
+            setCustomLayer(data);
+            setCustomLayerVisible(true);
+            setfileNameCustom3(file.name);
+            break;          
+          
+          // Añade casos para otros tipos de capas aquí
+          default:
+            break;
+        }
+        
       };
       reader.readAsText(file);
     }
   };
+  
+
+
+  
 
   const handleCheckboxChange = (layer) => {
     switch (layer) {
@@ -125,13 +196,13 @@ export default function App({
       case 'trips':
         setTripsLayerVisible((prev) => !prev);
         break;
-      case 'custom1':
+      case 'custom-1':
         setCustomLayerVisible1((prev) => !prev);
         break;
-      case 'custom2':
+      case 'custom-2':
         setCustomLayerVisible2((prev) => !prev);
         break;
-      case 'custom3':
+      case 'custom-3':
         setCustomLayerVisible3((prev) => !prev);
         break;
     
@@ -195,6 +266,7 @@ export default function App({
       // GeoJsonLayer tooltip content
       tooltipContent = (
         <div>
+          <b>NETWORK</b><br />
           <b>id: {object.properties.id}</b><br />
           <b>from: {object.properties.from}</b><br />
           <b>to: {object.properties.to}</b><br />
@@ -203,17 +275,44 @@ export default function App({
           <b>capacity: {object.properties.capacity}</b><br />
           <b>oneway: {object.properties.from}</b><br />
           <b>modes: {object.properties.from}</b>
-          {/* Agrega más información según sea necesario */}
+          {/*  más información  */}
         </div>
       );
     } else if (layer && layer.id === 'trips' && object) {
       // TripsLayer tooltip content
       tooltipContent = (
         <div>
+          <b>EVENTS</b><br />
           <b>Vehicle id: {object.vehicle}</b>
           
         </div>
       );
+
+    } else if (layer && layer.id === 'CustomLayer1' && object){
+      tooltipContent = (
+        <div>
+          <b>CUSTOM LAYER 1</b><br />
+          <b>id: {object.properties.id}</b><br />
+          <b>position: {object.geometry.coordinates}</b><br />
+        </div>
+      );
+    } else if (layer && layer.id === 'CustomLayer2' && object){
+      tooltipContent = (
+        <div>
+          <b>CUSTOM LAYER 2</b><br />
+          <b>id: {object.properties.id}</b><br />
+          <b>position: {object.geometry.coordinates}</b><br />
+        </div>
+      );
+    } else if (layer && layer.id === 'CustomLayer3' && object){
+      tooltipContent = (
+        <div>
+          <b>CUSTOM LAYER 3</b><br />
+          <b>id: {object.properties.id}</b><br />
+          <b>position: {object.geometry.coordinates}</b><br />
+        </div>
+      );
+
     } else {
       return null; // No se reconoce la capa o no hay objeto válido
     }
@@ -224,44 +323,71 @@ export default function App({
       </div>
     );
   }
-  
-
 
   
-
-
+  
+  const calculateInitialViewState = (customLayer4) => {
+    // Verificar que customLayer4 tenga al menos un elemento y la estructura esperada
+    if (customLayer4 && customLayer4.features && customLayer4.features.length > 0) {
+      const firstFeature = customLayer4.features[0];
+  
+      // Verificar que la primera característica tenga la estructura esperada
+      if (firstFeature.geometry && firstFeature.geometry.coordinates) {
+        const firstCoordinate = firstFeature.geometry.coordinates;
+  
+        // Configuración de initialViewState basada en la primera coordenada
+        return {
+          longitude: firstCoordinate[0],
+          latitude: firstCoordinate[1],
+          zoom: 12, 
+          pitch: 45,
+          bearing: 0,
+          
+        };
+      }
+    }
+  
+    return {
+      longitude: -79.0,
+      latitude: -2.9,
+      zoom: 2,
+      pitch: 45,
+      bearing: 0,
+    };
+  };
+  
 
   const layers = [
 
     networkLayerVisible &&
+    customLayer4 &&
     new GeoJsonLayer({
       id: 'MapNetwork',
-      data: net,
+      data: customLayer4,
       filled: true,
       pointRadiusMinPixels: 0,
-      pointRadiusScale: 1,
+      pointRadiusScale: pointRadiusScale,
       getPointRadius: (f) => 11 - f.properties.scalerank,
       getFillColor: [255, 0, 255, 255],  // centro
-      getLineColor:[200, 200, 200, 255],  //lineas
+      getLineWidth: getLineWidth,      //ancho de lineas
+      getLineColor:[0, 0, 0, 255],  //lineas
       pickable: true,
       onHover: (info) => setHoverInfo(info),
       autoHighlight: true,
-      //onClick: info =>
-      // eslint-disable-next-line
-      //info.object && alert(`${info.object.properties.id} (${info.object.properties.abbrev})`)
+      initialViewState: calculateInitialViewState(customLayer4) // Aquí se establece initialViewState
 
     }),
 
     tripsLayerVisible &&
+    customLayer5 &&
     new TripsLayer({
       id: 'trips',
-      data: trips,
+      data: customLayer5,
       getPath: (d) => d.path,
       getTimestamps: (d) => d.timestamps,
       getColor: (d) => theme.trailColor1,
-      opacity: 1,
-      widthMinPixels: 5,
-      rounded: true,
+      opacity: 0.4,
+      widthMinPixels: widthMinPixels,
       pickable: true,
       autoHighlight: true,
       trailLength:trailLength ,
@@ -284,6 +410,7 @@ export default function App({
       // highlightColor: [255, 0, 255, 1], // Color de resaltado
       pickable: true,
       autoHighlight: true,
+      onHover: (info) => setHoverInfo(info),
 
     }),
 
@@ -301,6 +428,7 @@ export default function App({
       // highlightColor: [255, 0, 255, 1], // Color de resaltado
       pickable: true,
       autoHighlight: true,
+      onHover: (info) => setHoverInfo(info),
 
     }),
 
@@ -319,6 +447,7 @@ export default function App({
       // highlightColor: [255, 0, 255, 1], // Color de resaltado
       pickable: true,
       autoHighlight: true,
+      onHover: (info) => setHoverInfo(info),
 
     }),
 
@@ -328,6 +457,7 @@ export default function App({
   return (
 
     <div className=''>
+      {/*Logo*/}
       <div className='app-name'>
       <div className="flex items-center right" >
         <h1>
@@ -340,37 +470,244 @@ export default function App({
       </div>
       </div>
 
+      {/*Barra lateral */}
+      <div className={`sidebar ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}>
+      <div className='lateral'>         
+          {/* Sidebar en el lado derecho */}
+          <div className=" bg-gray-700  z-10 top-0 w-200">{/* bg-gray-700  z-10 top-0 w-200*/}
+              <Sidebar aria-label="tools">
+                <Sidebar.Items>
+                  <Sidebar.ItemGroup>
+                    <Sidebar.Item href="#" icon={BiNetworkChart} style={{ color: 'dark', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start'}}>
+                      NETWORK  
+                    </Sidebar.Item>
+                          <div className='bg-gray-900 dark:bg-gray-700'>
+                            <div className='text-white' onClick={() => toggleLayerVisibility('network')} >
+                              <input type="checkbox" className="custom-checkbox" checked={networkLayerVisible} onChange={() => handleCheckboxChange('custom4', setNetworkLayerVisible)} />
+                              {networkLayerVisible ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameNetwork}</span>
+                            </div>
+                            <input 
+                              type="file" 
+                              id='nuevoArchivo4' 
+                              className='hidden' 
+                              accept=".json" 
+                              onChange={(e) => handleFileUpload(e, setCustomLayer4, setNetworkLayerVisible, setFileNameNetwork, 'network')} 
+                            />
+                            <label htmlFor="nuevoArchivo4" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                              <FaPlus  style={{ marginRight: '5px' }} />
+                              <div>Add network</div>
+                            </label>
+                            <div className="flex items-center justify-right ">
+                              <span className="text-white">
+                                  Node size {pointRadiusScale} :
+                              </span>
+                              <input
+                                type="range"
+                                min={1}
+                                max={20}
+                                step={1}
+                                value={pointRadiusScale}
+                                onChange={handlepointRadiusScaleChange}
+                                className='w-1/2 my-auto'
+                                style={{
+                                  background: `linear-gradient(to right, red ${((pointRadiusScale / 20) * 100)}%, rgba(196, 196, 196, 0.2) ${((pointRadiusScale / 20) * 100)}%)`,
+                                  WebkitAppearance: 'none',
+                                  height: '2px',
+                                  borderRadius: '1px',
+                                  outline: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              />
+                            </div>
+                            <div className="flex items-center justify-right ">
+                              <span className="text-white">
+                                  Link size {getLineWidth} :
+                              </span>
+                              <input
+                                type="range"
+                                min={1}
+                                max={10}
+                                step={1}
+                                value={getLineWidth}
+                                onChange={handlegetLineWidthChange}
+                                className='w-1/2 my-auto'
+                                style={{
+                                  background: `linear-gradient(to right, red ${((getLineWidth / 10) * 100)}%, rgba(196, 196, 196, 0.2) ${((getLineWidth / 10) * 100)}%)`,
+                                  WebkitAppearance: 'none',
+                                  height: '2px',
+                                  borderRadius: '1px',
+                                  outline: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              />
+                            </div>
 
+                          </div>
+                          <label className='barra'>
+                              __________________________________
+                          </label>
+                          
 
+                    <Sidebar.Item href="#" icon={FaCarSide } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                      EVENTS 
+                    </Sidebar.Item>
+                          <div className='bg-gray-900 dark:bg-gray-700'>
+                            <div className='text-white' onClick={() => toggleLayerVisibility('trips')}>
+                              <input type="checkbox" checked={tripsLayerVisible} onChange={() => handleCheckboxChange('custom5', setTripsLayerVisible)} />
+                              {tripsLayerVisible ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameTrips}</span>
+                            </div>
+                            <input 
+                              type="file" 
+                              id='nuevoArchivo5' 
+                              className='hidden' 
+                              accept=".json" 
+                              onChange={(e) => handleFileUpload(e, setCustomLayer5, setTripsLayerVisible,setFileNameTrips, 'trips')} 
+                            />
+                          <label htmlFor="nuevoArchivo5" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaPlus  style={{ marginRight: '5px' }} />
+                            <div>Add event</div>
+                          </label>
+                          </div>
+                        <div className="flex items-center justify-right ">
+                          <span className="text-white">
+                              TrailLenght {trailLength} :
+                          </span>
+                          <input
+                            type="range"
+                            min={1}
+                            max={2000}
+                            step={1}
+                            value={trailLength}
+                            onChange={handleTrailLengthChange}
+                            className='w-1/2 my-auto'
+                            style={{
+                              background: `linear-gradient(to right, red ${((trailLength / 2000) * 100)}%, rgba(196, 196, 196, 0.2) ${((trailLength / 2000) * 100)}%)`,
+                              WebkitAppearance: 'none',
+                              height: '2px',
+                              borderRadius: '1px',
+                              outline: 'none',
+                              cursor: 'pointer',
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-right ">
+                          <span className="text-white">
+                              Trail width {widthMinPixels} :
+                          </span>
+                          <input
+                            type="range"
+                            min={1}
+                            max={20}
+                            step={1}
+                            value={widthMinPixels}
+                            onChange={handlewidthMinPixelsChange}
+                            className='w-1/2 my-auto'
+                            style={{
+                              background: `linear-gradient(to right, red ${((widthMinPixels / 20) * 100)}%, rgba(196, 196, 196, 0.2) ${((widthMinPixels / 20) * 100)}%)`,
+                              WebkitAppearance: 'none',
+                              height: '2px',
+                              borderRadius: '1px',
+                              outline: 'none',
+                              cursor: 'pointer',
+                            }}
+                          />
+                        </div>
+                        <label className='barra'>
+                              __________________________________
+                          </label>
+                 
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                      CUSTOM LAYER 1 
+                    </Sidebar.Item>
+                          <div className='bg-gray-900 dark:bg-gray-700'>
+                            <div className='text-white' onClick={() => toggleLayerVisibility('custom1')}>
+                              <input type="checkbox" checked={customLayerVisible1} onChange={() => handleCheckboxChange('custom1', setCustomLayerVisible1)} />
+                              {customLayerVisible1 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom1}</span>
+                            </div>
+                            <input 
+                              type="file" 
+                              id='nuevoArchivo1' 
+                              className='hidden' 
+                              accept=".json" 
+                              onChange={(e) => handleFileUpload(e, setCustomLayer1, setCustomLayerVisible1, setfileNameCustom1, 'layer1')} 
+                            />
+                          <label htmlFor="nuevoArchivo1" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaPlus  style={{ marginRight: '5px'}} />
+                            <div>Add layer custom 1</div>
+                          </label>
+                          </div>
+                          <label className='barra'>
+                              __________________________________
+                          </label>
+
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                      CUSTOM LAYER 2 
+                    </Sidebar.Item>
+                          <div className='bg-gray-900 dark:bg-gray-700'>
+                            <div className='text-white' onClick={() => toggleLayerVisibility('custom2')}>
+                              <input type="checkbox" checked={customLayerVisible2} onChange={() => handleCheckboxChange('custom2', setCustomLayerVisible2)} />
+                              {customLayerVisible2 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom2}</span>
+                            </div>
+                            <input 
+                              type="file" 
+                              id='nuevoArchivo2' 
+                              className='hidden' 
+                              accept=".json" 
+                              onChange={(e) => handleFileUpload(e, setCustomLayer2, setCustomLayerVisible2, setfileNameCustom2, 'layer2')} 
+                            />
+                          <label htmlFor="nuevoArchivo2" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaPlus  style={{ marginRight: '5px' }} />
+                            <div>Add layer custom 2</div>
+                          </label>
+                          </div>
+                          <label className='barra'>
+                              __________________________________
+                          </label>
+
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                      CUSTOM LAYER 3 
+                    </Sidebar.Item>
+                          <div className='bg-gray-900 dark:bg-gray-700'>
+                            <div className='text-white' onClick={() => toggleLayerVisibility('custom3')}>
+                              <input type="checkbox" checked={customLayerVisible3} onChange={() => handleCheckboxChange('custom3', setCustomLayerVisible3)} />
+                              {customLayerVisible3 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom3}</span>
+                            </div>
+                            <input 
+                              type="file" 
+                              id='nuevoArchivo3' 
+                              className='hidden' 
+                              accept=".json" 
+                              onChange={(e) => handleFileUpload(e, setCustomLayer3, setCustomLayerVisible3,setfileNameCustom3, 'layer3')} 
+                            />
+                          <label htmlFor="nuevoArchivo3" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaPlus  style={{ marginRight: '5px' }} />
+                            <div>Add layer custom 3</div>
+                          </label>
+                          </div>
+                          <label className='barra'>
+                              __________________________________
+                          </label>
+                          <label className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                            <BiSolidFileJson  style={{ marginRight: '5px' }} />
+                            <a href="https://drive.google.com/drive/folders/15XABs_OBsoXMNkbqwlE7yOO9R_OaD3YP?usp=drive_link" target="_blank" rel="noopener noreferrer">Usage-example</a>
+                          </label>
+  
+
+                  
+                  </Sidebar.ItemGroup>
+                </Sidebar.Items>
+              </Sidebar>
+
+            </div>
+            </div>
+            </div>  
+      {/*Barra de reproductor */}
       <div className='relative'>
         <div className=' bg-gray-700 backdrop-blur-sm w-full absolute z-10 top-0' >
           <div className="w-full">
+          
             <div className="flex items-center justify-center mx-auto mb-1">
-
-            <div className="flex items-center justify-center">
-              <div className="flex items-right space-x-2">
-                <span className="text-md text-center font-medium text-gray-100 dark:text-gray-100">
-                  trailLength {trailLength}:
-                </span>
-                <input
-                  type="range"
-                  min={1}
-                  max={2000}
-                  step={1}
-                  value={trailLength}
-                  onChange={handleTrailLengthChange}
-                  className='w-1/4 my-auto'
-                  style={{
-                    background: `linear-gradient(to right, red ${((trailLength / 2000) * 100)}%, rgba(196, 196, 196, 0.2) ${((trailLength / 2000) * 100)}%)`,
-                    WebkitAppearance: 'none',
-                    height: '2px',
-                    borderRadius: '1px',
-                    outline: 'none',
-                    cursor: 'pointer',
-                  }}
-                />
-              </div>
-            </div>
+            
             <span className="ml-2 text-gray-500 dark:text-gray-300">{animationSpeed}</span>
               <span onClick={decreaseSpeed}  
                 className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600 relative">
@@ -401,69 +738,10 @@ export default function App({
                 </svg>
 
               </span>
-              <div className='bg-gray-900 dark:bg-gray-700'>
-                <Dropdown dismissOnClick={false}>
-                  <Dropdown.Item onClick={() => toggleLayerVisibility('network')}>
-                    <span className='text-white'>
-                      {networkLayerVisible ? 'Hide network' : 'Show network'}
-                    </span>
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => toggleLayerVisibility('trips')}>
-                    <span className='text-white'>
-                      {tripsLayerVisible ? 'Hide events' : 'Show events'}
-                    </span>
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  {/*layer 1*/}
-                  <Dropdown.Item onClick={() => toggleLayerVisibility('custom1')}>
-                    <span className='text-white'>
-                    <input type="checkbox" checked={customLayerVisible1} onChange={() => handleCheckboxChange('custom1', setCustomLayerVisible1)} />
-                      {customLayerVisible1 ? 'Hide custom layer 1' : 'Show custom layer 1'}
-                    </span>
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <label for="nuevoArchivo1" className='text-white'>
-                      Add layer 1
-                    </label>
-                  </Dropdown.Item>
-
-                  {/*layer 2*/}
-                  <Dropdown.Item onClick={() => toggleLayerVisibility('custom2')}>
-                    <span className='text-white'>
-                    <input type="checkbox" checked={customLayerVisible2} onChange={() => handleCheckboxChange('custom2', setCustomLayerVisible2)} />
-                      {customLayerVisible2 ? 'Hide custom layer 2' : 'Show custom layer 2'}
-                    </span>
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <label for="nuevoArchivo2" className='text-white'>
-                     Add layer 2
-                    </label>
-                  </Dropdown.Item>
-
-                  {/*layer 3*/}
-                  <Dropdown.Item onClick={() => toggleLayerVisibility('custom3')}>
-                    <label className= 'text-white' >
-                      <input type="checkbox" checked={customLayerVisible3} onChange={() => handleCheckboxChange('custom3', setCustomLayerVisible3)} />
-                      {customLayerVisible3 ? 'Hide custom layer 3' : 'Show custom layer 3'}
-                    </label>
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <label for="nuevoArchivo3" className='text-white'>
-                      Add layer 3
-                    </label>
-                  </Dropdown.Item>
-
-                </Dropdown>
-              </div>
+            <button onClick={handleToggleSidebar} style={{ fontSize: '20px', color: 'white' }}>
+              <TbAdjustmentsHorizontal/>
+            </button>
             </div>
-            {/* layer 1*/}
-            <input type="file" id='nuevoArchivo1' className=' hidden' accept=".geojson" onChange={(e) => handleFileUpload(e, setCustomLayer1, setCustomLayerVisible1)} />
-            
-            {/* layer 2 */}
-            <input type="file" id='nuevoArchivo2' className=' hidden' accept=".geojson" onChange={(e) => handleFileUpload(e, setCustomLayer2, setCustomLayerVisible2)} />
-
-            {/* layer 3 */}
-            <input type="file" id='nuevoArchivo3' className=' hidden' accept=".geojson" onChange={(e) => handleFileUpload(e, setCustomLayer3, setCustomLayerVisible3)} />
 
 
             <div className="flex items-center justify-between">
@@ -494,12 +772,17 @@ export default function App({
                 <span className="text-lg text-center font-medium text-gray-100 dark:text-gray-100 w-32">{Math.floor(((loopLength-time) % 86400) / 3600)}h {Math.floor(((loopLength-time) % 3600) / 60)}m {(loopLength-time) % 60}s</span>
                 
               </div>
+              
             </div>
           </div>
+
         </div>
+        
       </div>
 
-      <DeckGL layers={layers} effects={theme.effects} initialViewState={initialViewState} controller={true}>
+      
+
+      <DeckGL layers={layers} effects={theme.effects} initialViewState={calculateInitialViewState(customLayer4)} controller={true}>
         <Map reuseMaps mapLib={maplibregl} mapStyle={mapStyle} preventStyleDiffing={true} />
         {renderTooltip()}
 
