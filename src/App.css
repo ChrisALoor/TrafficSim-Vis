@@ -82,7 +82,7 @@
   }
   
   input[type="checkbox"]:checked {
-    background-color: green; /* Color de fondo del checkbox cuando está marcado */
+    background-color: rgb(0, 250, 0); /* Color de fondo del checkbox cuando está marcado */
   }
   
   /* Estilo del símbolo de verificación */
@@ -123,4 +123,11 @@
   max-height: 0px; 
   z-index: 10
   /* Obg-gray-700  z-10 top-0 w-1/2*/
+}
+
+
+.modal{
+    position: relative; /* Asegura que los modales aparezcan encima del fondo */
+    background-color: rgba(0, 0, 0, 0.3); /* Fondo semitransparente */
+  
 }

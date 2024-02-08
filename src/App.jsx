@@ -14,7 +14,8 @@ import { FaCarSide, FaLayerGroup ,FaPlus  } from "react-icons/fa";
 import { BiSolidFileJson } from "react-icons/bi";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 
-
+import { Button, Modal } from 'flowbite-react';
+import { FaInfoCircle } from "react-icons/fa";
 
 
 
@@ -35,7 +36,7 @@ export default function App({
   initialAnimationSpeed = 1,
 }) {
   
-  const [isPlaying, setPlaying] = useState(true);
+  const [isPlaying, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [animationSpeed, setAnimationSpeed] = useState(initialAnimationSpeed);
 
@@ -48,7 +49,7 @@ export default function App({
   const [fileNameCustom3, setfileNameCustom3] = useState('');
 
 
-
+  const [openModal, setOpenModal] = useState(true);
 
   const[trailLength, setTrailLength]=useState(50)
   const handleTrailLengthChange = (event) => {
@@ -470,21 +471,89 @@ export default function App({
       </div>
       </div>
 
+
+
+      {/* modal de informacion */}
+      <Modal className='relative p-20 md:h-auto bg-gray-900 bg-opacity-10 dark:bg-opacity-50 ' show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal.Header className="flex items-start justify-between rounded-t bg-blue-500 text-white h-full w-full p-7">
+            <div className="flex items-center">
+              <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+                <path d="M14.1427 15.9621C14.2701 16.2169 14.1593 16.5264 13.8991 16.6424L4.49746 20.835C3.00163 21.5021 1.45007 20.0209 2.19099 18.6331L5.34302 12.7294C5.58818 12.2702 5.58818 11.7298 5.34302 11.2706L2.19099 5.36689C1.45006 3.97914 3.00163 2.49789 4.49746 3.16496L8.02178 4.73662C8.44465 4.9252 8.78899 5.25466 8.99606 5.6688L14.1427 15.9621Z" fill="#1C274C"/>
+                <path opacity="0.5" d="M15.5332 15.3904C15.6529 15.6297 15.9397 15.7324 16.1841 15.6235L21.0066 13.4728C22.3304 12.8825 22.3304 11.1181 21.0066 10.5278L12.1089 6.55983C11.6802 6.36864 11.2481 6.82023 11.458 7.24008L15.5332 15.3904Z" fill="#1C274C"/>
+              </svg>
+              <h1 className="text-gray-900">Welcome to TrafficSim-Vis</h1>
+            </div>
+              <div>
+                <p className="text-base leading-relaxed text-gray-100 dark:text-white p-2" style={{ textAlign: 'justify' }}>
+                This is a single-page application developed to view files processed from MATSim simulations. 
+                It emerged as part of the work "Visual Analytics of Traffic Simulation Data". Users 
+                can view and analyze traffic simulation data using browsers efficiently.
+                </p>
+              </div>
+              <div>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p> 
+                <p>&nbsp;</p> 
+                <p>&nbsp;</p> 
+                <p className="text-base leading-relaxed text-gray-100 dark:text-white">
+                  Developed by: Christopher Almachi, Rolando Armas and Erick Cuenca
+                </p>
+              </div>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="space-y-6 p-6">
+              <p className="text-base leading-relaxed text-gray-100 dark:text-white">
+                How to use trafficSim-Vis?
+              </p>
+              <p className="text-base leading-relaxed text-gray-100 dark:text-white">
+              To use it you need to load the data from previous processing to the MATSim output files (output_network.xml.gz and output_events.xml.gz). 
+              After you have generated the files, you can now upload them.
+              </p>
+              <p className="text-base leading-relaxed text-gray-100 dark:text-white">
+               Slider tools information:
+              <ul>
+                <li>Node size = adjust the size of the node radius, range of 1 to 20 meters</li>
+                <li>Link size = adjust the size of the links width, range of 1 to 10 meters</li>
+                <li>TraiLenght = adjust vehicle trajectory fade, range of 1 to 2000 seconds</li>
+                <li>Trailwidth = adjust the width of the agents trail, range of 1 to 20 meters</li>
+              </ul>
+              </p>
+              
+            </div>
+
+            <Modal.Footer>
+          <Button onClick={() => setOpenModal(false)}></Button>
+          <Button className="p-2.5 group rounded-full bg-blue-500 hover:bg-blue-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600 relative" color="red" onClick={() => setOpenModal(false)}>
+            Accept
+          </Button>
+        </Modal.Footer>
+          </Modal.Body>
+
+      </Modal>
+
+
+
+
+
       {/*Barra lateral */}
       <div className={`sidebar ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}>
       <div className='lateral'>         
           {/* Sidebar en el lado derecho */}
-          <div className=" bg-gray-700  z-10 top-0 w-200">{/* bg-gray-700  z-10 top-0 w-200*/}
+          <div className=" bg-gray-700  z-10 top-0 w-200 p-2">{/* bg-gray-700  z-10 top-0 w-200*/}
               <Sidebar aria-label="tools">
                 <Sidebar.Items>
                   <Sidebar.ItemGroup>
-                    <Sidebar.Item href="#" icon={BiNetworkChart} style={{ color: 'dark', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start'}}>
+                    <Sidebar.Item  icon={BiNetworkChart} style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start',pointerEvents: 'none' }}  >
                       NETWORK  
                     </Sidebar.Item>
+
                           <div className='bg-gray-900 dark:bg-gray-700'>
                             <div className='text-white' onClick={() => toggleLayerVisibility('network')} >
                               <input type="checkbox" className="custom-checkbox" checked={networkLayerVisible} onChange={() => handleCheckboxChange('custom4', setNetworkLayerVisible)} />
-                              {networkLayerVisible ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameNetwork}</span>
+                              {networkLayerVisible ? ' Hide: ' : ' Show: '}<span className='text-white'>{fileNameNetwork}</span>
                             </div>
                             <input 
                               type="file" 
@@ -494,8 +563,10 @@ export default function App({
                               onChange={(e) => handleFileUpload(e, setCustomLayer4, setNetworkLayerVisible, setFileNameNetwork, 'network')} 
                             />
                             <label htmlFor="nuevoArchivo4" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                              <FaPlus  style={{ marginRight: '5px' }} />
-                              <div>Add network</div>
+                              <div className="p-0.1 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
+                                <FaPlus style={{ marginRight: '5px' }} />
+                                <span>Add network</span>
+                              </div>
                             </label>
                             <div className="flex items-center justify-right ">
                               <span className="text-white">
@@ -548,13 +619,13 @@ export default function App({
                           </label>
                           
 
-                    <Sidebar.Item href="#" icon={FaCarSide } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                    <Sidebar.Item href="#" icon={FaCarSide } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start',pointerEvents: 'none' }}>
                       EVENTS 
                     </Sidebar.Item>
                           <div className='bg-gray-900 dark:bg-gray-700'>
                             <div className='text-white' onClick={() => toggleLayerVisibility('trips')}>
                               <input type="checkbox" checked={tripsLayerVisible} onChange={() => handleCheckboxChange('custom5', setTripsLayerVisible)} />
-                              {tripsLayerVisible ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameTrips}</span>
+                              {tripsLayerVisible ? ' Hide: ' : ' Show: '}<span className='text-white'>{fileNameTrips}</span>
                             </div>
                             <input 
                               type="file" 
@@ -563,10 +634,12 @@ export default function App({
                               accept=".json" 
                               onChange={(e) => handleFileUpload(e, setCustomLayer5, setTripsLayerVisible,setFileNameTrips, 'trips')} 
                             />
-                          <label htmlFor="nuevoArchivo5" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                            <FaPlus  style={{ marginRight: '5px' }} />
-                            <div>Add event</div>
-                          </label>
+                            <label htmlFor="nuevoArchivo5" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                              <div className="p-0.1 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
+                                <FaPlus style={{ marginRight: '5px' }} />
+                                <span>Add event</span>
+                              </div>
+                            </label>
                           </div>
                         <div className="flex items-center justify-right ">
                           <span className="text-white">
@@ -616,13 +689,13 @@ export default function App({
                               __________________________________
                           </label>
                  
-                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start',pointerEvents: 'none' }}>
                       CUSTOM LAYER 1 
                     </Sidebar.Item>
                           <div className='bg-gray-900 dark:bg-gray-700'>
                             <div className='text-white' onClick={() => toggleLayerVisibility('custom1')}>
                               <input type="checkbox" checked={customLayerVisible1} onChange={() => handleCheckboxChange('custom1', setCustomLayerVisible1)} />
-                              {customLayerVisible1 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom1}</span>
+                              {customLayerVisible1 ? ' Hide: ' : ' Show: '}<span className='text-white'>{fileNameCustom1}</span>
                             </div>
                             <input 
                               type="file" 
@@ -631,22 +704,24 @@ export default function App({
                               accept=".json" 
                               onChange={(e) => handleFileUpload(e, setCustomLayer1, setCustomLayerVisible1, setfileNameCustom1, 'layer1')} 
                             />
-                          <label htmlFor="nuevoArchivo1" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                            <FaPlus  style={{ marginRight: '5px'}} />
-                            <div>Add layer custom 1</div>
-                          </label>
+                            <label htmlFor="nuevoArchivo1" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                              <div className="p-0.1 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
+                                <FaPlus style={{ marginRight: '5px' }} />
+                                <span>Add custom layer 1</span>
+                              </div>
+                            </label>
                           </div>
                           <label className='barra'>
                               __________________________________
                           </label>
 
-                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start',pointerEvents: 'none' }}>
                       CUSTOM LAYER 2 
                     </Sidebar.Item>
                           <div className='bg-gray-900 dark:bg-gray-700'>
                             <div className='text-white' onClick={() => toggleLayerVisibility('custom2')}>
                               <input type="checkbox" checked={customLayerVisible2} onChange={() => handleCheckboxChange('custom2', setCustomLayerVisible2)} />
-                              {customLayerVisible2 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom2}</span>
+                              {customLayerVisible2 ? ' Hide: ' : ' Show: '}<span className='text-white'>{fileNameCustom2}</span>
                             </div>
                             <input 
                               type="file" 
@@ -655,22 +730,24 @@ export default function App({
                               accept=".json" 
                               onChange={(e) => handleFileUpload(e, setCustomLayer2, setCustomLayerVisible2, setfileNameCustom2, 'layer2')} 
                             />
-                          <label htmlFor="nuevoArchivo2" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                            <FaPlus  style={{ marginRight: '5px' }} />
-                            <div>Add layer custom 2</div>
-                          </label>
+                            <label htmlFor="nuevoArchivo2" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                              <div className="p-0.1 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
+                                <FaPlus style={{ marginRight: '5px' }} />
+                                <span>Add custom layer 2</span>
+                              </div>
+                            </label>
                           </div>
                           <label className='barra'>
                               __________________________________
                           </label>
 
-                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start' }}>
+                    <Sidebar.Item href="#" icon={FaLayerGroup } style={{ color: 'light', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-start',pointerEvents: 'none' }}>
                       CUSTOM LAYER 3 
                     </Sidebar.Item>
                           <div className='bg-gray-900 dark:bg-gray-700'>
                             <div className='text-white' onClick={() => toggleLayerVisibility('custom3')}>
                               <input type="checkbox" checked={customLayerVisible3} onChange={() => handleCheckboxChange('custom3', setCustomLayerVisible3)} />
-                              {customLayerVisible3 ? 'Hide: ' : 'Show: '}<span className='text-white'>{fileNameCustom3}</span>
+                              {customLayerVisible3 ? ' Hide: ' : ' Show: '}<span className='text-white'>{fileNameCustom3}</span>
                             </div>
                             <input 
                               type="file" 
@@ -679,10 +756,12 @@ export default function App({
                               accept=".json" 
                               onChange={(e) => handleFileUpload(e, setCustomLayer3, setCustomLayerVisible3,setfileNameCustom3, 'layer3')} 
                             />
-                          <label htmlFor="nuevoArchivo3" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                            <FaPlus  style={{ marginRight: '5px' }} />
-                            <div>Add layer custom 3</div>
-                          </label>
+                            <label htmlFor="nuevoArchivo3" className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
+                              <div className="p-0.1 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
+                                <FaPlus style={{ marginRight: '5px' }} />
+                                <span>Add custom layer 3</span>
+                              </div>
+                            </label>
                           </div>
                           <label className='barra'>
                               __________________________________
@@ -703,22 +782,36 @@ export default function App({
             </div>  
       {/*Barra de reproductor */}
       <div className='relative'>
+        
+        <span onClick={handleToggleSidebar} >
+              <button className="z-30 top-0 left-20 p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative"     onMouseEnter={() => setMensaje('Tool Layers')} onMouseLeave={clearMensaje}>
+                  <TbAdjustmentsHorizontal style={{ fontSize: '24px', color: 'white' }}/>
+                
+              </button>
+        </span>
+        <span onClick={() => setOpenModal(true)} >
+                <button className="z-30 top-0 right-1 p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative"     onMouseEnter={() => setMensaje('Information')} onMouseLeave={clearMensaje}>
+                    <FaInfoCircle style={{ fontSize: '24px', color: 'white' }}/>
+                  
+                </button>
+        </span>
         <div className=' bg-gray-700 backdrop-blur-sm w-full absolute z-10 top-0' >
           <div className="w-full">
-          
+
+
             <div className="flex items-center justify-center mx-auto mb-1">
             
             <span className="ml-2 text-gray-500 dark:text-gray-300">{animationSpeed}</span>
               <span onClick={decreaseSpeed}  
-                className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600 relative">
+                className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative">
 
                 <svg onMouseEnter={() => setMensaje('Decrease Speed')} onMouseLeave={clearMensaje} className="rtl:rotate-180 w-4 h-4 text-gray-500 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
                 </svg>
 
               </span>
-              {mensaje && <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mt-2 text-gray-500 dark:text-gray-300">{mensaje}</span>}
-              <span onClick={togglePlayPause} className="inline-flex items-center justify-center p-2.5 mx-2 font-medium bg-azul rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+              {mensaje && <span className="absolute bg-gray-800 bottom-0 left-1/2 transform -translate-x-1/2 mt-2 text-gray-500 dark:text-gray-300">{mensaje}</span>}
+              <span onClick={togglePlayPause} className="inline-flex items-center justify-center p-2.5 mx-2 font-medium bg-azul rounded-full hover:bg-red-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-gray-800">
                 {
                   isPlaying ?
                     <svg onMouseEnter={() => setMensaje('Pause')} onMouseLeave={clearMensaje} className="w-3 h-3 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="white" viewBox="0 0 10 16">
@@ -731,16 +824,14 @@ export default function App({
               </span>
               <span
                 onClick={increaseSpeed}
-                className="p-2.5 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600 relative">
+                className="p-2.5 group rounded-full hover:bg-gray-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative">
 
                 <svg onMouseEnter={() => setMensaje('Increase Speed')} onMouseLeave={clearMensaje} className="rtl:rotate-180 w-4 h-4 text-gray-500 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
                 </svg>
 
               </span>
-            <button onClick={handleToggleSidebar} style={{ fontSize: '20px', color: 'white' }}>
-              <TbAdjustmentsHorizontal/>
-            </button>
+
             </div>
 
 
@@ -777,8 +868,12 @@ export default function App({
           </div>
 
         </div>
-        
+        <div>
+
+        </div>
+
       </div>
+
 
       
 
