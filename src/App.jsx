@@ -498,8 +498,11 @@ export default function App({
                 <p>&nbsp;</p> 
                 <p>&nbsp;</p> 
                 <p>&nbsp;</p> 
+                <p>&nbsp;</p> 
+                <p>&nbsp;</p> 
+                <p>&nbsp;</p> 
                 <p className="text-base leading-relaxed text-gray-100 dark:text-white">
-                  Developed by: Christopher Almachi, Rolando Armas and Erick Cuenca
+                  
                 </p>
               </div>
           </Modal.Header>
