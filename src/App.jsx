@@ -262,29 +262,42 @@ export default function App({
     const { object, x, y, layer } = hoverInfo;
   
     let tooltipContent;
-  
     if (layer && layer.id === 'MapNetwork' && object) {
-      // GeoJsonLayer tooltip content
-      tooltipContent = (
-        <div>
-          <b>NETWORK</b><br />
-          <b>id: {object.properties.id}</b><br />
-          <b>from: {object.properties.from}</b><br />
-          <b>to: {object.properties.to}</b><br />
-          <b>length: {object.properties.length}</b><br />
-          <b>freespeed: {object.properties.freespeed}</b><br />
-          <b>capacity: {object.properties.capacity}</b><br />
-          <b>oneway: {object.properties.from}</b><br />
-          <b>modes: {object.properties.from}</b>
-          {/*  más información  */}
-        </div>
-      );
-    } else if (layer && layer.id === 'trips' && object) {
+      // Verificar si el objeto es un punto (nodo) o una línea (enlace)
+      if (object.geometry.type === 'Point') {
+        // GeoJsonLayer tooltip content para nodos
+        tooltipContent = (
+          <div>
+            <b>NODE NETWORK</b><br />
+            <b>node id: {object.properties.id}</b><br />
+            <b>position: {object.geometry.coordinates[0]}, {object.geometry.coordinates[1]}</b><br />
+          </div>
+        );
+      } else if (object.geometry.type === 'LineString') {
+        // GeoJsonLayer tooltip content para enlaces
+        tooltipContent = (
+          <div>
+            <b>LINK NETWORK</b><br />
+            <b>link id: {object.properties.id}</b><br />
+            <b>from: {object.properties.from}</b><br />
+            <b>to: {object.properties.to}</b><br />
+            <b>length: {object.properties.length}</b><br />
+            <b>freespeed: {object.properties.freespeed}</b><br />
+            <b>capacity: {object.properties.capacity}</b><br />
+            <b>oneway: {object.properties.oneway}</b><br />
+            <b>modes: {object.properties.modes}</b>
+            {/*  más información  */}
+          </div>
+        );
+      }
+    }
+
+    else if (layer && layer.id === 'trips' && object) {
       // TripsLayer tooltip content
       tooltipContent = (
         <div>
           <b>EVENTS</b><br />
-          <b>Vehicle id: {object.vehicle}</b>
+          <b>vehicle id: {object.vehicle}</b>
           
         </div>
       );
@@ -294,7 +307,7 @@ export default function App({
         <div>
           <b>CUSTOM LAYER 1</b><br />
           <b>id: {object.properties.id}</b><br />
-          <b>position: {object.geometry.coordinates}</b><br />
+          <b>position: {object.geometry.coordinates[0]}, {object.geometry.coordinates[1]}</b><br />
         </div>
       );
     } else if (layer && layer.id === 'CustomLayer2' && object){
@@ -302,7 +315,7 @@ export default function App({
         <div>
           <b>CUSTOM LAYER 2</b><br />
           <b>id: {object.properties.id}</b><br />
-          <b>position: {object.geometry.coordinates}</b><br />
+          <b>position: {object.geometry.coordinates[0]}, {object.geometry.coordinates[1]}</b><br />
         </div>
       );
     } else if (layer && layer.id === 'CustomLayer3' && object){
@@ -310,7 +323,7 @@ export default function App({
         <div>
           <b>CUSTOM LAYER 3</b><br />
           <b>id: {object.properties.id}</b><br />
-          <b>position: {object.geometry.coordinates}</b><br />
+          <b>position: {object.geometry.coordinates[0]}, {object.geometry.coordinates[1]}</b><br />
         </div>
       );
 
@@ -375,6 +388,7 @@ export default function App({
       pickable: true,
       onHover: (info) => setHoverInfo(info),
       autoHighlight: true,
+      highlightColor: [255, 141, 0, 225], 
       initialViewState: calculateInitialViewState(customLayer4) // Aquí se establece initialViewState
 
     }),
@@ -391,6 +405,7 @@ export default function App({
       widthMinPixels: widthMinPixels,
       pickable: true,
       autoHighlight: true,
+      highlightColor: [25, 100, 255, 225], 
       trailLength:trailLength ,
       currentTime: time,
       shadowEnabled: false,
