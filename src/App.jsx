@@ -20,8 +20,9 @@ import { FaInfoCircle } from "react-icons/fa";
 
 
 const DEFAULT_THEME = {
-  trailColor0: [253, 128, 93],
-  trailColor1: [23, 184, 190],
+  trailColor0: [255, 115, 0],//naranja
+  trailColor1: [23, 184, 190],//turquesa
+  trailColor2: [255, 0, 0],//rojo
 };
 
 //const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json'; //mapa negro sin labels
@@ -388,7 +389,7 @@ export default function App({
       pickable: true,
       onHover: (info) => setHoverInfo(info),
       autoHighlight: true,
-      highlightColor: [255, 141, 0, 225], 
+      highlightColor: [23, 184, 190, 225], 
       initialViewState: calculateInitialViewState(customLayer4) // Aquí se establece initialViewState
 
     }),
@@ -400,7 +401,7 @@ export default function App({
       data: customLayer5,
       getPath: (d) => d.path,
       getTimestamps: (d) => d.timestamps,
-      getColor: (d) => theme.trailColor1,
+      getColor: (d) => theme.trailColor0,
       opacity: 0.4,
       widthMinPixels: widthMinPixels,
       pickable: true,
