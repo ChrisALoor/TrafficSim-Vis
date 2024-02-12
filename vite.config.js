@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: 'https://chrisaloor.github.io/maps-main/'
+  base: 'https://chrisaloor.github.io/TrafficSim-Vis/'
 })
