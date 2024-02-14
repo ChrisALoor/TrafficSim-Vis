@@ -12,6 +12,9 @@ In today's world, transportation is one of society's most important needs, espec
 
 # To install
 you just need to make a copy of the repository and run:  
+
     $ npm install
+    
 With all dependencies will be installed, then :
+
     $ npm run dev
