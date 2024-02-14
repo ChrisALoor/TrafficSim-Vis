@@ -9,3 +9,9 @@ In today's world, transportation is one of society's most important needs, espec
 
 - [TrafficSim-Vis](https://chrisaloor.github.io/TrafficSim-Vis/) 
 - Also can read [Visual Analytics of Traffic Simulation Data: a Review](https://link.springer.com/chapter/10.1007/978-3-031-52517-9_4)
+
+# To install
+you just need to make a copy of the repository and run:  
+    $ npm install
+With all dependencies will be installed, then :
+    $ npm run dev
