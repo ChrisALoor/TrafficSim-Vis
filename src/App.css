@@ -7,8 +7,8 @@
     position: absolute;
     bottom: 10px;
     right: 10px;
-    font-size: 23px;
-    font-family: 'Bodoni MT Condensed';
+    font-size: 18px;
+    font-family: 'Serif';
     font-weight: bold;
     color: #0c0c0cd0;
     z-index: 12;
@@ -23,7 +23,7 @@
   .app-name svg {
     fill: #0c0c0cd0;
     top: 50%;
-    transform: translateX(40%); 
+    transform: translateX(45%); 
   }
   
   .tooltip {
@@ -106,8 +106,7 @@
   z-index: 0;
   color: #fff;
   min-width: 10px;
-  /* max-height: 0px; */
-  /* Otros estilos de la barra lateral colapsada */
+
 }
 
 /* Estilos para la barra lateral cuando está expandida */
@@ -116,18 +115,18 @@
   position: absolute;
   top: 80px;
   left: 4px;
-  background: #0c0c0cd0;
+  background: #141414d0;
   z-index: 9;
-  color: #fff;
+  color: #ffffff;
   min-width: 200px;
   max-height: 0px; 
   z-index: 10
-  /* Obg-gray-700  z-10 top-0 w-1/2*/
+ 
 }
 
 
 .modal{
-    position: relative; /* Asegura que los modales aparezcan encima del fondo */
+    position: relative; 
     background-color: rgba(0, 0, 0, 0.3); /* Fondo semitransparente */
   
 }
