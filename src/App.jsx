@@ -10,7 +10,7 @@ import { TripsLayer } from '@deck.gl/geo-layers';
 import { Button, Modal, Sidebar } from 'flowbite-react';
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import React, { useState, useEffect, useRef } from 'react';
-import { BiNetworkChart, BiSolidFileJson } from "react-icons/bi"
+import { BiNetworkChart} from "react-icons/bi"
 import { FaInfoCircle, FaCarSide, FaLayerGroup ,FaPlus  } from "react-icons/fa";
 
 
