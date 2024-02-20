@@ -70,6 +70,13 @@ export default function App({
     setgetLineWidth(newgetLineWidth);
   };
 
+  const[opacity, setopacity]=useState(0.4)
+  const handleOpacityChange = (event) => {
+    const newopacity= parseFloat(event.target.value);
+    setopacity(newopacity);
+  };
+
+  
 
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -350,7 +357,7 @@ export default function App({
     };
   };
   
-
+  
   const layers = [
 
     networkLayerVisible &&
@@ -381,7 +388,7 @@ export default function App({
       getPath: (d) => d.path,
       getTimestamps: (d) => d.timestamps,
       getColor: (d) => theme.trailColor0,
-      opacity: 0.4,
+      opacity: opacity,
       widthMinPixels: widthMinPixels,
       pickable: true,
       autoHighlight: true,
@@ -466,11 +473,9 @@ export default function App({
       </div>
       </div>
 
-
-
       {/* modal de informacion */}
       <Modal className='relative p-20 md:h-auto bg-gray-900 bg-opacity-80 dark:bg-opacity-80 ' show={openModal} onClose={() => setOpenModal(false)}>
-            <Modal.Header className="flex items-start justify-between rounded-t bg-blue-500 text-white h-full w-full p-7">
+            <Modal.Header className="flex items-start justify-center rounded-t bg-blue-500 text-white h-full w-full p-2">
             <div className="flex items-center">
               <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
                 <path d="M14.1427 15.9621C14.2701 16.2169 14.1593 16.5264 13.8991 16.6424L4.49746 20.835C3.00163 21.5021 1.45007 20.0209 2.19099 18.6331L5.34302 12.7294C5.58818 12.2702 5.58818 11.7298 5.34302 11.2706L2.19099 5.36689C1.45006 3.97914 3.00163 2.49789 4.49746 3.16496L8.02178 4.73662C8.44465 4.9252 8.78899 5.25466 8.99606 5.6688L14.1427 15.9621Z" fill="#1C274C"/>
@@ -478,38 +483,23 @@ export default function App({
               </svg>
               <h1 className="text-gray-900">Welcome to TrafficSim-Vis!</h1>
             </div>
-              <div>
-                <p className="text-base leading-relaxed text-gray-100 dark:text-white p-2" style={{ textAlign: 'justify' }}>
+
+          </Modal.Header>
+          <Modal.Body>
+            <div className="space-y-2 ">
+    
+                <p className="text-base leading-relaxed text-gray-100 dark:text-white" style={{ textAlign: 'justify' }}>
                 This is a single-page application developed to view files processed from MATSim simulations. 
                 It emerged as part of the work "Visual Analytics of Traffic Simulation Data". Users 
                 can view and analyze traffic simulation data using browsers efficiently.
                 </p>
-              </div>
-              <div>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p>
-                <p>&nbsp;</p> 
-                <p>&nbsp;</p> 
-                <p>&nbsp;</p> 
-                <p>&nbsp;</p> 
-                <p>&nbsp;</p> 
-                <p>&nbsp;</p> 
-                <p className="text-base leading-relaxed text-gray-100 dark:text-white">
-                  
-                </p>
-              </div>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="space-y-6 p-6">
-              <p className="text-base leading-relaxed text-gray-100 dark:text-white ">
-              <strong>How to use trafficSim-Vis?</strong>
-              </p>
+        
               <p className="text-base leading-relaxed text-gray-100 dark:text-white">
-              To use it you need to load the data from previous processing to the MATSim output files (output_network.xml.gz and output_events.xml.gz). 
-              After you have generated the files, you can now upload them.
+              <strong>How to use it?</strong><br />
+              You need to load the data from previous <a href="https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/parsing%20files" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">preprocessing</span></a> to the MATSim output files ( output_network.xml.gz and output_events.xml.gz ). 
+              After you have generated the files, you can now upload them in Tool Layers. ( or <a href="https://drive.google.com/drive/folders/15XABs_OBsoXMNkbqwlE7yOO9R_OaD3YP?usp=drive_link" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">usage-example</span></a> ). 
               </p>
+              
               <p className="text-base leading-relaxed text-gray-100 dark:text-white">
                Slider tools information:
               <ul>
@@ -517,11 +507,12 @@ export default function App({
                 <li><strong>Link size</strong> = adjust the size of the links width, range of 1 to 10 meters</li>
                 <li><strong>TraiLenght</strong> = adjust vehicle trajectory fade, range of 1 to 2000 seconds</li>
                 <li><strong>Trailwidth</strong> = adjust the width of the agents trail, range of 1 to 20 meters</li>
+                <li><strong>TrailOpacity</strong> = adjust the opacity of the trail, range of 10% to 100 %</li>
               </ul>
               </p>
             </div>
 
-            <Modal.Footer>
+            <Modal.Footer className="flex justify-center">
               <Button onClick={() => setOpenModal(false)}></Button>
               <Button className="p-2.5 group rounded-full bg-blue-500 hover:bg-blue-100 me-1 focus:outline-none focus:ring-4 focus:ring-gray-500 dark:focus:ring-gray-600 dark:hover:bg-gray-600 relative" color="red" onClick={() => setOpenModal(false)}>
                 Accept
@@ -539,7 +530,7 @@ export default function App({
       <div className={`sidebar ${isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}>
       <div className='lateral'>         
           {/* Sidebar en el lado derecho */}
-          <div className=" bg-gray-700  z-10 top-0 w-200 p-2">{/* bg-gray-700  z-10 top-0 w-200*/}
+          <div className=" bg-gray-700  z-10 top-0 w-300 p-2">{/* bg-gray-700  z-10 top-0 w-200*/}
               <Sidebar aria-label="tools">
                 <Sidebar.Items>
                   <Sidebar.ItemGroup>
@@ -567,9 +558,9 @@ export default function App({
                                 <span>Add network</span>
                               </div>
                             </label>
-                            <div className="flex items-center justify-right ">
-                              <span className="text-white">
-                                  Node size {pointRadiusScale} :
+                            <div className="flex flex-col items-right justify-right ">
+                              <span className="text-white mb-2">
+                                  Node size ({pointRadiusScale} meters) :
                               </span>
                               <input
                                 type="range"
@@ -578,7 +569,7 @@ export default function App({
                                 step={1}
                                 value={pointRadiusScale}
                                 onChange={handlepointRadiusScaleChange}
-                                className='w-1/2 my-auto'
+                                className='w-90 my-auto'
                                 style={{
                                   background: `linear-gradient(to right, red ${((pointRadiusScale / 20) * 100)}%, rgba(196, 196, 196, 0.2) ${((pointRadiusScale / 20) * 100)}%)`,
                                   WebkitAppearance: 'none',
@@ -589,18 +580,18 @@ export default function App({
                                 }}
                               />
                             </div>
-                            <div className="flex items-center justify-right ">
-                              <span className="text-white">
-                                  Link size {getLineWidth} :
+                            <div className="flex flex-col items-right justify-right  mt-2 ">
+                              <span className="text-white mb-2">
+                                  Link size ({getLineWidth} meters) :
                               </span>
                               <input
                                 type="range"
-                                min={1}
+                                min={0}
                                 max={10}
                                 step={1}
                                 value={getLineWidth}
                                 onChange={handlegetLineWidthChange}
-                                className='w-1/2 my-auto'
+                                className='w-90  my-auto'
                                 style={{
                                   background: `linear-gradient(to right, red ${((getLineWidth / 10) * 100)}%, rgba(196, 196, 196, 0.2) ${((getLineWidth / 10) * 100)}%)`,
                                   WebkitAppearance: 'none',
@@ -641,9 +632,12 @@ export default function App({
                               </div>
                             </label>
                             </div>
-                            <div className="flex items-center justify-right ">
-                              <span className="text-white">
-                                  TrailLenght {trailLength} :
+
+
+
+                            <div className="flex flex-col items-right justify-right">
+                              <span className="text-white mb-2">
+                                TrailLenght ({trailLength} seconds) :
                               </span>
                               <input
                                 type="range"
@@ -652,7 +646,7 @@ export default function App({
                                 step={1}
                                 value={trailLength}
                                 onChange={handleTrailLengthChange}
-                                className='w-1/2 my-auto'
+                                className='w-90  my-auto'
                                 style={{
                                   background: `linear-gradient(to right, red ${((trailLength / 2000) * 100)}%, rgba(196, 196, 196, 0.2) ${((trailLength / 2000) * 100)}%)`,
                                   WebkitAppearance: 'none',
@@ -663,9 +657,10 @@ export default function App({
                                 }}
                               />
                             </div>
-                            <div className="flex items-center justify-right ">
-                              <span className="text-white">
-                                  Trail width {widthMinPixels} :
+
+                            <div className="flex flex-col items-right justify-right  mt-2">
+                              <span className="text-white mb-2">
+                                  TrailWidth ({widthMinPixels} meters) :
                               </span>
                               <input
                                 type="range"
@@ -674,7 +669,7 @@ export default function App({
                                 step={1}
                                 value={widthMinPixels}
                                 onChange={handlewidthMinPixelsChange}
-                                className='w-1/2 my-auto'
+                                className='w-90 my-auto'
                                 style={{
                                   background: `linear-gradient(to right, red ${((widthMinPixels / 20) * 100)}%, rgba(196, 196, 196, 0.2) ${((widthMinPixels / 20) * 100)}%)`,
                                   WebkitAppearance: 'none',
@@ -683,11 +678,31 @@ export default function App({
                                   outline: 'none',
                                   cursor: 'pointer',
                                 }}
-                              />
-              
-                            
-                          </div>
+                              />               
+                            </div>
 
+                            <div className="flex flex-col items-right justify-right  mt-2">
+                              <span className="text-white mb-2">
+                                  TrailOpacity ({opacity * 100}%):
+                              </span>
+                              <input
+                                type="range"
+                                min={0}
+                                max={1.0}
+                                step={0.1}
+                                value={opacity}
+                                onChange={handleOpacityChange}
+                                className='w-90 my-auto'
+                                style={{
+                                  background: `linear-gradient(to right, red ${((opacity / 1.0) * 100)}%, rgba(196, 196, 196, 0.2) ${((opacity / 1.0) * 100)}%)`,
+                                  WebkitAppearance: 'none',
+                                  height: '2px',
+                                  borderRadius: '1px',
+                                  outline: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              />               
+                            </div>
 
                           <label className='barra'>
                                 __________________________________
@@ -767,15 +782,7 @@ export default function App({
                               </div>
                             </label>
                           </div>
-                          <label className='barra'>
-                              __________________________________
-                          </label>
-                          <label className='text-white' style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="p-0.1 group rounded-full hover:bg-gray-100/50 me-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-blue-600 relative" style={{ display: 'flex', alignItems: 'center' }}>
-                              <BiSolidFileJson  style={{ marginRight: '5px' }} />
-                              <a href="https://drive.google.com/drive/folders/15XABs_OBsoXMNkbqwlE7yOO9R_OaD3YP?usp=drive_link" target="_blank" rel="noopener noreferrer">Usage-example</a>
-                            </div>
-                          </label>
+
                           
 
                   
