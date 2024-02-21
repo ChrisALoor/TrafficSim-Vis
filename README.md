@@ -1,4 +1,4 @@
-# TrafficSim-Vis
+## TrafficSim-Vis
 
 This is a single-page application developed to view files processed from MATSim simulations. It emerged as part of the work "Visual Analytics of Traffic Simulation Data". Users can view and analyze traffic simulation data using browsers efficiently.
 
@@ -10,11 +10,23 @@ In today's world, transportation is one of society's most important needs, espec
 - [TrafficSim-Vis](https://chrisaloor.github.io/TrafficSim-Vis/) 
 - Also can read [Visual Analytics of Traffic Simulation Data: a Review](https://link.springer.com/chapter/10.1007/978-3-031-52517-9_4)
 
-# To install
-you just need to make a copy of the repository and run:  
+## Requirements 
+This single-application uses npm, and was developed using VS Code
+ - Install  Node js (18.0v >) with Node Package Manager npm (9.0v >)
+
+## Development Commands
+You just need to make a copy of the repository and run: 
 
     $ npm install
+
+this command installed all development dependencies 
     
-With all dependencies will be installed, then :
+After that, run:
 
     $ npm run dev
+
+this command runs a local server usually listens on localhost
+
+# Compiles and minifies for production
+
+    $ npm run build
