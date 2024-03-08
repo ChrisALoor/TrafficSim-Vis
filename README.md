@@ -12,11 +12,7 @@ In today's world, transportation is one of society's most important needs, espec
 
 ## Links
 
-- [TrafficSim-Vis Single-Page](https://chrisaloor.github.io/TrafficSim-Vis/)|
-
-[Usage video](https://youtu.be/)|
-
-- Also can read [Visual Analytics of Traffic Simulation Data: a Review](https://link.springer.com/chapter/10.1007/978-3-031-52517-9_4)
+[TrafficSim-Vis Single-Page](https://chrisaloor.github.io/TrafficSim-Vis/)| [Usage video](https://youtu.be/) | Also can read [Visual Analytics of Traffic Simulation Data: a Review](https://link.springer.com/chapter/10.1007/978-3-031-52517-9_4)
 
 
 
@@ -38,7 +34,7 @@ Finally, to execute the file you enter the name of the script (in this example i
 
 In the case of choosing `parsingFiles_notebook.py`, we must place the coordinates of the simulation that we want to parse in the same way as in the script. Drag the files to the work area and start executing each of the cells.
 
-As a result we will obtain two files ready to upload to TrafficSim-Vis.
+As a result we will obtain two files ready to upload to TrafficSim-Vis. On the other hand, if you want to modify or continue working on developing the code you need the following.
 
 ## Development Commands
 You just need to make a copy of the repository and run: 
