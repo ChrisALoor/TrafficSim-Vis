@@ -29,7 +29,7 @@ To perform the visualization in TrafficSim-Vis, you must parse the output files 
 
 Now, to execute the file, you enter the name of the script, and the coordinates of the simulation that you want to parsing (for example, epsg:32717), after that, the path of the network and events files, respectively. (In case you want examples files to use parsing go to [exampleMATSimData](https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/parsingFile/exampleMATSimData))
 
-    python parsingFiles_script.py epsg:32717 <output_network.xml.g> <output_events.xml.gz> 
+    python parsingFiles_script.py epsg:32717 <output_network.xml.gz> <output_events.xml.gz> 
 
 As a result we will obtain two files ready to upload to TrafficSim-Vis. On the other hand, if you want to modify or continue working on developing the code you need the following.
 
