@@ -496,8 +496,9 @@ export default function App({
         
               <p className="text-base leading-relaxed text-gray-100 dark:text-white">
               <strong>How to use it?</strong><br />
-              You need to load the data from previous <a href="https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/parsingFile" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">preprocessing</span></a> to the MATSim output files ( output_network.xml.gz and output_events.xml.gz ). 
-              After you have generated the files, you can now upload them in Tool Layers. ( or <a href="https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/src/data" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">usage-example</span></a> ). 
+              You need to <a href="https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/parsingFile" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">preprocess</span></a> the MATSim output files (output_network.xml.gz and output_events.xml.gz). 
+              When you have done this, you will get two JSON files ready to be loaded to this application from the ToolsLayer button (in case you only need usage-example <a href="https://github.com/ChrisALoor/TrafficSim-Vis/tree/main/src/data" target="_blank" rel="noopener noreferrer"><span className="text-blue-500 ">clic here</span></a>) .
+              
               </p>
               
               <p className="text-base leading-relaxed text-gray-100 dark:text-white">
