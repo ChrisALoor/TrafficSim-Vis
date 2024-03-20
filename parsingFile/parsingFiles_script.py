@@ -8,7 +8,7 @@
 #     - know coordinates of the simulation that you want to parsing (example, epsg:32717)    
 #                                                                          
 #     run:                                                                 
-#    $ python parsingFiles_script.py epsg:32717 <output_network.xml.g> <output_events.xml.gz> 
+#    $ python parsingFiles_script.py epsg:32717 <output_network.xml.gz> <output_events.xml.gz> 
 #                                                                          
 #  ******************************************************************************************** 
 
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     parser.add_argument('coordinates', type=str, help='simulation coordinates (e.g., epsg:3719)')
     parser.add_argument('network_file', type=str, help='Path to the MATSim network file (output_network.xml.gz)')
     parser.add_argument('events_file', type=str, help='Path to the MATSim events file (output_events.xml.gz)')
-    
+
     args = parser.parse_args()
 
     try:
