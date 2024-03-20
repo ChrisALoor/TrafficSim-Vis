@@ -1,49 +1,37 @@
-# /* *********************************************************************** *
-#  * Code developed to : TrafficSim-Vis							             *
-#  *         A work of : Visual Analytics of Traffic Simulation Data         *
-#  * *********************************************************************** *
-#  *                                                                         *                          
-#  * Author            : Christopher Almachi                                 *
-#  *                                                                         *
-#  * *********************************************************************** *
-#  *                                                                         *
-#  *   This code was developed to process data from MATSim outputs. And its  *
-#  *   main purpose is to achieve the visualization of the simulations       *
-#  *   through a single-page application.                                    *
-#  *                                                                         *
-#  *   To run it you only need:                                              *
-#  *    - configure the coordenates that you want. Example: epsg:32717  in   *
-#  *         crs_source = Proj(init='epsg:32717')                            *
-#  *                                                                         *
-#  *    run:                                                                 *
-#  *   $ python name_script.py <output_network.xml.g> <output_events.xml.gz> *
-#  *                                                                         *
-#  * *********************************************************************** */
+
+#  ******************************************************************************************** 
+#  Code developed to : TrafficSim-Vis							             
+#          A work of : Visual Analytics of Traffic Simulation Data         
+#  ********************************************************************************************
+#                                                                          
+#    To run it you only need:                                              
+#     - know coordinates of the simulation that you want to parsing (example, epsg:32717)    
+#                                                                          
+#     run:                                                                 
+#    $ python parsingFiles_script.py epsg:32717 <output_network.xml.g> <output_events.xml.gz> 
+#                                                                          
+#  ******************************************************************************************** 
 
 # libraries
-import sys
-import argparse
-import json
-import gzip
 import math
-import shutil
+import json
 import matsim
+import argparse
 import pandas as pd
-from pyproj import Transformer
-import xml.etree.ElementTree as ET
 from pyproj import Proj, transform
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 
 net = None
 
-
-def process_network(input_network_file):
+# function to convert output_network.xml file to json format
+def process_network(set_coordinates,networkFile):
     # Read network file
     global net
-    net = matsim.read_network(input_network_file)
+    net = matsim.read_network(networkFile)
 
     # Set coordinates
-    crs_source = Proj(init='epsg:32717') # Cuenca
+    crs_source = Proj(init=set_coordinates) 
     crs_target = Proj(init='epsg:4326')
 
     def transform_coordinates(row):
@@ -103,16 +91,13 @@ def process_network(input_network_file):
     print(f"  ")
     print(f"Network file generated successfully.")
 
-
-
-
 #__________________________________________________________________________________________________________
 
-def process_events(output_events_file):
+# function to convert output_events.xml file to json format
+def process_events(eventsFile):
     global net
-    events = matsim.event_reader(output_events_file, types=('entered link'))
+    events = matsim.event_reader(eventsFile, types=('entered link'))
     df_events = pd.DataFrame(events)
-
 
     # Drop unnecessary columns
     row_del_events = ['type']
@@ -154,15 +139,22 @@ def process_events(output_events_file):
         print(f"Part {part + 1} from Event file generated successfully.")
 
 
-
+# initial 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process MATSim network and events files.')
+    # function arguments
+    parser.add_argument('coordinates', type=str, help='simulation coordinates (e.g., epsg:3719)')
     parser.add_argument('network_file', type=str, help='Path to the MATSim network file (output_network.xml.gz)')
     parser.add_argument('events_file', type=str, help='Path to the MATSim events file (output_events.xml.gz)')
+    
     args = parser.parse_args()
 
-    process_network(args.network_file)
-    process_events(args.events_file)
-    print("********************************************************")
-    print("* Your files are ready to be upload to TrafficSim-Vis! *")
-    print("********************************************************")
+    try:
+        process_network(args.coordinates,args.network_file)
+        process_events(args.events_file)
+        print("********************************************************")
+        print("* Your files are ready to be upload to TrafficSim-Vis! *")
+        print("********************************************************")
+    except Exception as e:
+        print("An error occurred:", e)
+        print("Please check your coordinates, input files and try again.")
